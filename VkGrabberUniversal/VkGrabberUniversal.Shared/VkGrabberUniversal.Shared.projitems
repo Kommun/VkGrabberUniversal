@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>659f7841-6205-446e-9a37-722b5b4846b9</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>VkGrabberUniversal</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DateTimePicker.xaml.cs">
+      <DependentUpon>DateTimePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsSection.xaml.cs">
+      <DependentUpon>SettingsSection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\Scope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Group.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Messenger\GrabMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\ApiError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\ApiResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\Attachment.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\City.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\GroupInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\Like.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\ListResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\Photo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\Post.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\Repost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\UploadResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\User.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\WallUploadServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\CustomCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Messenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\NavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\PropertyChangedBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\SchedulerSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\SettingsManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\VkApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\VkSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PostsListViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\DateTimePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\SettingsSection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
