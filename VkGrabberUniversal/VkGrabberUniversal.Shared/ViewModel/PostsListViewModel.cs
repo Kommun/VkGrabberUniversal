@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using VkGrabberUniversal.Utils;
+using VkGrabberUniversal.Model;
 using VkGrabberUniversal.Model.Rest;
 using VkGrabberUniversal.Model.Messenger;
 
@@ -174,11 +175,11 @@ namespace VkGrabberUniversal.ViewModel
                 var groupInfo = (await App.VkApi.GetGroupsById(group.Name))?.FirstOrDefault();
                 if (groupInfo == null)
                 {
-                    //var dialogResult = new CustomMessageBox().ShowModal($"Группа '{group.Name}' не найдена. Удалить ее из списка?", "Да", "Нет");
-                    //if (dialogResult == 0)
-                    //    App.VkSettings.Groups.Remove(group);
+                    var dialogResult = await App.PopupManager.ShowMessageDialog($"Группа '{group.Name}' не найдена. Удалить ее из списка?", false);
+                    if (dialogResult)
+                        App.VkSettings.Groups.Remove(group);
 
-                    //continue;
+                    continue;
                 }
 
                 var res = await App.VkApi.GetPosts(groupInfo.Id, 100, group.Offset);
@@ -188,22 +189,22 @@ namespace VkGrabberUniversal.ViewModel
                 // Если с сервера получено 0 постов
                 if (res.Items.Count == 0)
                 {
-                    //var dialogResult = new CustomMessageBox().ShowModal($"В группе {group.Name} закончились посты", "Деактивировать", "Обнулить сдвиг", "Удалить");
-                    //if (dialogResult != null)
-                    //{
-                    //    switch (dialogResult.Value)
-                    //    {
-                    //        case 0:
-                    //            group.IsActive = false;
-                    //            break;
-                    //        case 1:
-                    //            group.Offset = 0;
-                    //            break;
-                    //        case 2:
-                    //            App.VkSettings.Groups.Remove(group);
-                    //            break;
-                    //    }
-                    //}
+                    var dialogResult = await App.PopupManager.ShowListDialog(new string[] { "Деактивировать", "Обнулить сдвиг", "Удалить" }, $"В группе {group.Name} закончились посты");
+                    if (dialogResult != -1)
+                    {
+                        switch (dialogResult)
+                        {
+                            case 0:
+                                group.IsActive = false;
+                                break;
+                            case 1:
+                                group.Offset = 0;
+                                break;
+                            case 2:
+                                App.VkSettings.Groups.Remove(group);
+                                break;
+                        }
+                    }
                 }
 
                 // Отбираем посты, к которым ничего не прикреплено или прикреплены только фото, а также фильтруем по количеству лайков и репостов
@@ -283,7 +284,7 @@ namespace VkGrabberUniversal.ViewModel
             var groupInfo = (await App.VkApi.GetGroupsById(App.VkSettings.TargetGroup))?.FirstOrDefault();
             if (groupInfo == null)
             {
-                await new MessageDialog("Целевая группа задана неверно").ShowAsync();
+                await App.PopupManager.ShowNotificationPopup("Целевая группа задана неверно");
                 return false;
             }
 
@@ -344,18 +345,18 @@ namespace VkGrabberUniversal.ViewModel
         /// <param name="parameter"></param>
         private async void PostAtTime(object parameter = null)
         {
-            //var time = new DateTimeDialog().ShowModal();
+            var time = await App.PopupManager.ShowDateTimeDialog();
 
-            //if (time == null)
-            //    return;
+            if (time == null)
+                return;
 
-            //if (time < DateTime.Now.AddMinutes(1))
-            //{
-            //    await new MessageDialog("Невозможно добавить пост с прошедшей датой").ShowAsync();
-            //    return;
-            //}
+            if (time < DateTime.Now.AddMinutes(1))
+            {
+                await App.PopupManager.ShowNotificationPopup("Невозможно добавить пост с прошедшей датой");
+                return;
+            }
 
-            //await Post(parameter as Post, time);
+            await Post(parameter as Post, time);
         }
 
         /// <summary>
@@ -365,13 +366,13 @@ namespace VkGrabberUniversal.ViewModel
         private async void PostWithScheduler(object parameter)
         {
             if (App.VkSettings.SchedulerSettings.FromTime == null || App.VkSettings.SchedulerSettings.ToTime == null)
-                await new MessageDialog("Задайте временные рамки планировщика").ShowAsync();
+                await App.PopupManager.ShowNotificationPopup("Задайте временные рамки планировщика");
             else if (App.VkSettings.SchedulerSettings.Interval == null)
-                await new MessageDialog("Задайте интервал планировщика").ShowAsync();
+                await App.PopupManager.ShowNotificationPopup("Задайте интервал планировщика");
             else if (App.VkSettings.SchedulerSettings.NextPostDate == null)
-                await new MessageDialog("Задайте дату следующего поста").ShowAsync();
+                await App.PopupManager.ShowNotificationPopup("Задайте дату следующего поста");
             else if (App.VkSettings.SchedulerSettings.NextPostDate < DateTime.Now.AddMinutes(1))
-                await new MessageDialog("Дата следующего поста должна быть больше текущей").ShowAsync();
+                await App.PopupManager.ShowNotificationPopup("Дата следующего поста должна быть больше текущей");
             else
             {
                 var success = await Post(parameter as Post, App.VkSettings.SchedulerSettings.NextPostDate);
@@ -397,8 +398,12 @@ namespace VkGrabberUniversal.ViewModel
         /// <param name="parameter"></param>
         private void Zoom(object parameter = null)
         {
-            ZoomedPhoto = (parameter as Attachment).Photo.BiggestPhoto;
-            //_currentZoomedPost = multiparameter[1] as Post;
+            var attachmentInfo = parameter as AttachmentInfo;
+            if (attachmentInfo == null)
+                return;
+
+            ZoomedPhoto = attachmentInfo.Attachment.Photo.BiggestPhoto;
+            _currentZoomedPost = attachmentInfo.Post as Post;
             ZoomedPhotoVisibility = Visibility.Visible;
         }
 

@@ -18,10 +18,23 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DateTimePicker.xaml.cs">
       <DependentUpon>DateTimePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Popup\DateTimeDialog.xaml.cs">
+      <DependentUpon>DateTimeDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Popup\ListDialogPopup.xaml.cs">
+      <DependentUpon>ListDialogPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Popup\MessageDialogPopup.xaml.cs">
+      <DependentUpon>MessageDialogPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Popup\NotificationMessage.xaml.cs">
+      <DependentUpon>NotificationMessage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\SettingsSection.xaml.cs">
       <DependentUpon>SettingsSection.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Enums\Scope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\AttachmentInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Group.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Messenger\GrabMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\ApiError.cs" />
@@ -40,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\CustomCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Messenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\NavigationService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\PopupManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\PropertyChangedBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SchedulerSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SettingsManager.cs" />
@@ -50,6 +64,22 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\DateTimePicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Popup\DateTimeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Popup\ListDialogPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Popup\MessageDialogPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Popup\NotificationMessage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

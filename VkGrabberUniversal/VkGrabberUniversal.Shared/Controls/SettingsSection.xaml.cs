@@ -34,8 +34,10 @@ namespace VkGrabberUniversal.Controls
 
         #endregion
 
+        #region AdditionalContentProperty
+
         /// <summary>
-        /// Gets or sets additional content for the UserControl
+        /// Контент
         /// </summary>
         public object AdditionalContent
         {
@@ -44,6 +46,8 @@ namespace VkGrabberUniversal.Controls
         }
 
         public static readonly DependencyProperty AdditionalContentProperty = DependencyProperty.Register("AdditionalContent", typeof(object), typeof(SettingsSection), null);
+
+        #endregion
 
         public SettingsSection()
         {

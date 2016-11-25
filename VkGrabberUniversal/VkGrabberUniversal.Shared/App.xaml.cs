@@ -27,6 +27,7 @@ namespace VkGrabberUniversal
     public sealed partial class App : Application
     {
         public static NavigationService NavigationService { get; set; }
+        public static PopupManager PopupManager { get; } = new PopupManager();
         public static VkSettings VkSettings { get; private set; }
         public static VkApi VkApi { get; private set; }
 

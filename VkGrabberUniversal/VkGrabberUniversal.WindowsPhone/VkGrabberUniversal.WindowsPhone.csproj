@@ -130,6 +130,10 @@
       <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\wpa81\System.Net.Http.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="UniversalWrapPanel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\UniversalWrapPanel.1.0.0\lib\wpa81\UniversalWrapPanel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\AuthorizationView.xaml">

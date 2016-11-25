@@ -1,0 +1,42 @@
+﻿<UserControl
+    x:Class="VkGrabberUniversal.Controls.NotificationMessage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VkGrabberUniversal.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="message">
+
+    <Grid>
+        <Border Background="Black"
+                Opacity="0.4"/>
+        <Border Background="White"
+                CornerRadius="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="20,40">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding Message, ElementName=message}"
+                               FontSize="20"
+                               Foreground="Black"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"/>
+                </ScrollViewer>
+                <Button x:Name="btnClose"
+                        Content="Ок"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
+                        Padding="50,10"
+                        Grid.Row="1"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
