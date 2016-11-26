@@ -6,8 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
-using System.Net.Http;
+using System.Net.Http.Headers;
+using Windows.Foundation;
 using Windows.UI.Popups;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.Web.Http;
+using Windows.Networking.BackgroundTransfer;
 using VkGrabberUniversal.Model.Rest;
 using RestSharp.Portable;
 using RestSharp.Portable.HttpClient;
@@ -101,13 +106,6 @@ namespace VkGrabberUniversal.Utils
             var response = await client.Execute<ApiResponse<T>>(request);
             _queriesCountLastSecond++;
 
-            //if (response.ErrorException != null)
-            //{
-            //    const string message = "Error retrieving response.  Check inner details for more info.";
-            //    var twilioException = new ApplicationException(message, response.ErrorException);
-            //    throw twilioException;
-            //}
-
             if (response.Data.Error != null && showErrors)
             {
                 var errorCode = response.Data.Error.Error_Code;
@@ -167,39 +165,41 @@ namespace VkGrabberUniversal.Utils
         /// <returns></returns>
         public async Task<bool> Post(string groupId, bool fromGroup, string message, List<Attachment> attachments, DateTimeOffset? publishDate = null)
         {
+            string attachmentsString = "";
+            // Получаем сервер для загрузки фото
+            var uploadServer = await GetWallUploadServer(groupId);
+            var client = new HttpClient();
+
+            foreach (var attach in attachments)
+            {
+                string fileName = $"PostImages\\{attach.Photo.Id}.png";
+
+                // Скачиваем фото из группы
+                var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+                BackgroundDownloader downloader = new BackgroundDownloader();
+                DownloadOperation download = downloader.CreateDownload(new Uri(attach.Photo.BiggestPhoto), file);
+                await download.StartAsync();
+
+                //Загружаем фото на сервер                
+                var multipart = new HttpMultipartFormDataContent();
+                multipart.Add(new HttpStreamContent(await file.OpenAsync(FileAccessMode.Read)), "file", fileName);
+                var response = await client.PostAsync(new Uri(uploadServer.Upload_Url), multipart);
+                var uploadResult = Newtonsoft.Json.JsonConvert.DeserializeObject<UploadResult>(await response.Content.ReadAsStringAsync());
+
+                // Удаляем локальный файл
+                await file.DeleteAsync();
+
+                // Сохраняем фото на стене
+                var photo = await SaveWallPhoto(groupId, uploadResult);
+                attachmentsString += $"photo{photo.Owner_Id}_{photo.Id},";
+            }
+
+            // Формируем запрос
             var request = new RestRequest("wall.post", Method.POST);
             request.AddParameter("owner_id", $"-{groupId}");
             request.AddParameter("from_group", fromGroup);
             request.AddParameter("message", message);
-
-            string attachmentsString = "";
-            var client = new HttpClient();
-            // Получаем сервер для загрузки фото
-            var uploadServer = await GetWallUploadServer(groupId);
-
-            string directoryName = "PostImages";
-            //if (!Directory.Exists(directoryName))
-            //    Directory.CreateDirectory(directoryName);
-
-            //foreach (var attach in attachments)
-            //{
-            //    string fileName = $"{directoryName}\\{attach.Photo.Id}.png";
-
-            //    // Скачиваем фото из группы
-            //    client.geDownloadFile(attach.Photo.BiggestPhoto, fileName);
-
-            //    // Загружаем фото на сервер
-            //    var res = client.UploadFile(uploadServer.Upload_Url, fileName);
-            //    var uploadResult = Newtonsoft.Json.JsonConvert.DeserializeObject<UploadResult>(Encoding.UTF8.GetString(res));
-
-            //    // Удаляем локальный файл
-            //    File.Delete(fileName);
-
-            //    // Сохраняем фото на стене
-            //    var photo = await SaveWallPhoto(groupId, uploadResult);
-            //    attachmentsString += $"photo{photo.Owner_Id}_{photo.Id},";
-            //}
-
             request.AddParameter("attachments", attachmentsString);
 
             if (publishDate != null)
