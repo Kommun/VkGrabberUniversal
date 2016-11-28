@@ -17,6 +17,10 @@
             <Setter Property="Foreground" Value="SteelBlue"/>
         </Style>
 
+        <Style TargetType="controls:SettingsSection">
+            <Setter Property="Width" Value="550"/>
+        </Style>
+
         <DataTemplate x:Key="groupTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -35,22 +39,12 @@
                          Grid.Column="3"/>
                 <TextBox Text="{Binding Offset, Mode=TwoWay}"
                          Grid.Column="4"/>
-            </Grid>
-            <!--<DataGridCheckBoxColumn Header="Активна"
-                                    Binding="{Binding IsActive}"/>
-            <DataGridTextColumn Header="Название или Id группы"
-                                    Binding="{Binding Name}"/>
-            <DataGridTextColumn Header="Кол-во лайков"
-                                    Binding="{Binding LikeCount}"/>
-            <DataGridTextColumn Header="Кол-во репостов"
-                                    Binding="{Binding RepostCount}"/>
-            <DataGridTextColumn Header="Сдвиг"
-                                    Binding="{Binding Offset}"/>-->
+            </Grid>        
         </DataTemplate>
 
     </Page.Resources>
 
-    <ScrollViewer>
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
             <controls:SettingsSection Header="Текущий пользователь">

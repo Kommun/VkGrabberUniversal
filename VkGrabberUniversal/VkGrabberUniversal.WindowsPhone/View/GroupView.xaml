@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="VkGrabberUniversal.View.GroupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:VkGrabberUniversal.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:VkGrabberUniversal.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <controls:SettingsSection>
+        <StackPanel>
+            <ToggleSwitch Header="Активна"
+                          IsOn="{Binding IsActive, Mode=TwoWay}"/>
+            <TextBox Header="Название или Id группы"
+                     Text="{Binding Name, Mode=TwoWay}"/>
+            <TextBox Header="Количество лайков"
+                     Text="{Binding LikeCount, Mode=TwoWay}"
+                     InputScope="Number"/>
+            <TextBox Header="Количество репостов"
+                     Text="{Binding RepostCount, Mode=TwoWay}"
+                     InputScope="Number"/>
+            <TextBox Header="Сдвиг"
+                     Text="{Binding Offset, Mode=TwoWay}"
+                     InputScope="Number"/>
+        </StackPanel>
+    </controls:SettingsSection>
+</Page>

@@ -17,71 +17,75 @@
             <Setter Property="Foreground" Value="SteelBlue"/>
         </Style>
 
+        <DataTemplate x:Key="groupTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox IsChecked="{Binding IsActive, Mode=TwoWay}"/>
+                <TextBox Text="{Binding Name, Mode=TwoWay}"
+                         Grid.Column="1"/>
+                <TextBox Text="{Binding LikeCount, Mode=TwoWay}"
+                         Grid.Column="2"/>
+                <TextBox Text="{Binding RepostCount, Mode=TwoWay}"
+                         Grid.Column="3"/>
+                <TextBox Text="{Binding Offset, Mode=TwoWay}"
+                         Grid.Column="4"/>
+            </Grid>
+        </DataTemplate>
+
     </Page.Resources>
 
-    <ScrollViewer>
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
             <controls:SettingsSection Header="Текущий пользователь">
                 <controls:SettingsSection.AdditionalContent>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Width="50" Height="50">
-                            <Border Name="mask" Background="White" CornerRadius="50"/>
-                            <Ellipse Height="50"
-                                 Width="50">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="50" Height="50">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="{Binding CurrentUser.Photo_50}"
-                                            AlignmentX="Center"
-                                            AlignmentY="Center" />
+                                                AlignmentX="Center"
+                                                AlignmentY="Center" />
                                 </Ellipse.Fill>
                             </Ellipse>
-                        </Grid>
-                        <StackPanel Orientation="Horizontal"
-                            VerticalAlignment="Center"
-                            Margin="20,0"
-                            Grid.Column="1">
-                            <TextBlock Text="{Binding CurrentUser.First_Name}"
-                               Style="{StaticResource userNameStyle}"/>
-                            <TextBlock Text="{Binding CurrentUser.Last_Name}"
-                               Style="{StaticResource userNameStyle}"
-                               Margin="10,0,0,0"/>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        Margin="20,0,0,0">
+                                <TextBlock Text="{Binding CurrentUser.First_Name}"
+                                       Style="{StaticResource userNameStyle}"/>
+                                <TextBlock Text="{Binding CurrentUser.Last_Name}"
+                                       Style="{StaticResource userNameStyle}"
+                                       Margin="10,0,0,0"/>
+                            </StackPanel>
                         </StackPanel>
 
                         <Button Content="Выйти"
                                 Padding="20,10"
-                                VerticalAlignment="Center"
-                                Command="{Binding LogoutCommand}"
-                                Grid.Column="2"/>
-                    </Grid>
+                                HorizontalAlignment="Stretch"
+                                Command="{Binding LogoutCommand}"/>
+                    </StackPanel>
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
 
             <controls:SettingsSection Header="Основные настройки">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
-                        <!--<DataGrid ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
-                  AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridCheckBoxColumn Header="Активна"
-                                    Binding="{Binding IsActive}"/>
-                            <DataGridTextColumn Header="Название или Id группы"
-                                    Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Кол-во лайков"
-                                    Binding="{Binding LikeCount}"/>
-                            <DataGridTextColumn Header="Кол-во репостов"
-                                    Binding="{Binding RepostCount}"/>
-                            <DataGridTextColumn Header="Сдвиг"
-                                    Binding="{Binding Offset}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>-->
+                        <ItemsControl ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
+                                      ItemTemplate="{StaticResource groupTemplate}"/>
+                        <Button Content="Добавить группу"
+                                Command="{Binding AddGroupCommand}"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,20,0,0"
+                                Padding="0,10"/>
 
                         <TextBlock Text="Название или Id целевой группы (куда будут добавляться посты)"
-                   Margin="0,20,0,0"/>
+                                   Margin="0,20,0,0"/>
                         <TextBox Text="{Binding VkSettings.TargetGroup, Mode=TwoWay}"/>
 
                         <Button Content="Обновить список записей"
@@ -98,21 +102,21 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TimePicker Time="{Binding VkSettings.SchedulerSettings.FromTime, Mode=TwoWay}"
-                                    Header="Начало"/>
+                                        Header="Начало"/>
 
                             <TimePicker Time="{Binding VkSettings.SchedulerSettings.ToTime, Mode=TwoWay}"
-                                    Header="Конец"
-                                    Margin="30,0,0,0"/>
+                                        Header="Конец"
+                                        Margin="30,0,0,0"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
                             <TimePicker Time="{Binding VkSettings.SchedulerSettings.Interval, Mode=TwoWay}"
-                                    Header="Интервал"
-                                    Margin="0,20,0,0"/>
+                                        Header="Интервал"
+                                        Margin="0,20,0,0"/>
 
                             <TimePicker Time="{Binding VkSettings.SchedulerSettings.Error, Mode=TwoWay}"
-                                    Header="Погрешность(+/-)"
-                                    Margin="30,20,0,0"/>
+                                        Header="Погрешность(+/-)"
+                                        Margin="30,20,0,0"/>
                         </StackPanel>
                         <controls:DateTimePicker Value="{Binding VkSettings.SchedulerSettings.NextPostDate, Mode=TwoWay}"
                                                  Header="Дата добавления следующей записи"

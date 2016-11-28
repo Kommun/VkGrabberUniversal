@@ -25,11 +25,6 @@ namespace VkGrabberUniversal.ViewModel
         #region Commands
 
         /// <summary>
-        /// Настройки
-        /// </summary>
-        public ICommand SettingsCommand { get; set; } = new CustomCommand((p) => App.NavigationService.Navigate(typeof(View.SettingsView)));
-
-        /// <summary>
         /// Получить список постов
         /// </summary>
         public ICommand GrabNextCommand { get; set; }

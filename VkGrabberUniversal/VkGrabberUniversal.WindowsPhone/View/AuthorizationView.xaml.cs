@@ -24,7 +24,7 @@ namespace VkGrabberUniversal.View
     /// </summary>
     public sealed partial class AuthorizationView : Page
     {
-
+        private bool logOuted;
 
         /// <summary>
         /// Конструктор
@@ -49,18 +49,30 @@ namespace VkGrabberUniversal.View
                 wvAuthorization.Navigate(new Uri("https://m.vk.com/"));
                 await Task.Run(() =>
                 {
-                    //while (!logOuted) { }
+                    while (!logOuted) { }
                 });
             }
 
-            wvAuthorization.NavigationCompleted += WvAuthorization_NavigationCompleted;
+            wvAuthorization.NavigationCompleted += WvAuthorization_LoginNavigationCompleted;
             wvAuthorization.Navigate(new Uri(string.Format("https://oauth.vk.com/authorize?client_id={0}&scope={1}&redirect_uri={2}&display=page&response_type=token",
                   VkSettings.AppId, VkSettings.Scopes, VkSettings.RedirectUri)));
         }
 
-        private void WvAuthorization_LoadCompleted(object sender, NavigationEventArgs e)
+        /// <summary>
+        /// Обработчик загрузки главной страницы мобильной версии ВК
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void WvAuthorization_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            throw new NotImplementedException();
+            try
+            {
+                wvAuthorization.NavigationCompleted += WvAuthorization_LogoutNavigationCompleted;
+                await wvAuthorization.InvokeScriptAsync("eval", new string[] { "window.location.href = document.getElementsByClassName(\"mmi_logout\")[0].children[0].getAttribute(\"href\");" });
+            }
+            catch { }
+
+            wvAuthorization.LoadCompleted -= WvAuthorization_LoadCompleted;
         }
 
         /// <summary>
@@ -68,7 +80,7 @@ namespace VkGrabberUniversal.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void WvAuthorization_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void WvAuthorization_LoginNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             wvAuthorization.Visibility = Visibility.Visible;
             if (string.IsNullOrEmpty(args.Uri.Fragment))
@@ -77,46 +89,21 @@ namespace VkGrabberUniversal.View
             var decoder = new WwwFormUrlDecoder(args.Uri.Fragment.Substring(1));
             App.VkSettings.AccessToken = decoder.GetFirstValueByName("access_token");
             App.VkSettings.UserId = decoder.GetFirstValueByName("user_id");
-            App.NavigationService.Navigate(typeof(SettingsView));
+            App.NavigationService.Navigate(typeof(MainView));
 
-            wvAuthorization.NavigationCompleted -= WvAuthorization_NavigationCompleted;
-        }
-
-        /// <summary>
-        /// Обработчик загрузки главной страницы мобильной версии ВК
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void WbAuthorization_MainPageLoadCompleted(object sender, NavigationEventArgs e)
-        {
-            //try
-            //{
-            //    var document = wvAuthorization.Document as IHTMLDocument3;
-            //    var logoutLink = document.getElementsByTagName("li")
-            //        .Cast<IHTMLElement>()
-            //        .FirstOrDefault(el => el.getAttribute("className") == "mmi_logout")
-            //        .children[0].getAttribute("href");
-            //    if (!string.IsNullOrEmpty(logoutLink))
-            //    {
-            //        wbAuthorization.Navigated += WbAuthorization_LogoutNavigated;
-            //        wbAuthorization.Navigate(logoutLink);
-            //    }
-            //}
-            //catch (Exception ex) { MessageBox.Show(ex.Message); }
-
-            //wbAuthorization.LoadCompleted -= WbAuthorization_MainPageLoadCompleted;
+            wvAuthorization.NavigationCompleted -= WvAuthorization_LoginNavigationCompleted;
         }
 
         /// <summary>
         /// Обработчик перехода по ссылке логаута
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void WbAuthorization_LogoutNavigated(object sender, NavigationEventArgs e)
+        /// <param name="args"></param>
+        private void WvAuthorization_LogoutNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             // Вышли из учетной записи
-            //logOuted = true;
-            //wvAuthorization.NavigationCompleted -= WbAuthorization_LogoutNavigated;
+            logOuted = true;
+            wvAuthorization.NavigationCompleted -= WvAuthorization_LogoutNavigationCompleted;
         }
     }
 }

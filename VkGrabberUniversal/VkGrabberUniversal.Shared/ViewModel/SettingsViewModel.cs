@@ -12,6 +12,8 @@ namespace VkGrabberUniversal.ViewModel
 {
     public class SettingsViewModel : PropertyChangedBase
     {
+        #region Commands
+
         /// <summary>
         /// Добавить группу
         /// </summary>
@@ -26,6 +28,8 @@ namespace VkGrabberUniversal.ViewModel
         /// Выйти из учетной записи
         /// </summary>
         public ICommand LogoutCommand { get; set; } = new CustomCommand((object p) => { App.NavigationService.Navigate(typeof(View.AuthorizationView), true); });
+
+        #endregion
 
         private User _currentUser;
         /// <summary>
@@ -54,7 +58,7 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         public SettingsViewModel()
         {
-            AddGroupCommand = new CustomCommand((object p) => VkSettings.Groups.Add(new Model.Group()));
+            AddGroupCommand = new CustomCommand(AddGroup);
             GetCurrentUser();
         }
 
@@ -64,6 +68,17 @@ namespace VkGrabberUniversal.ViewModel
         private async void GetCurrentUser()
         {
             CurrentUser = (await App.VkApi.GetUsersById(VkSettings.UserId)).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Добавить группу
+        /// </summary>
+        /// <param name="parameter"></param>
+        private void AddGroup(object parameter)
+        {
+            var group = new Model.Group();
+            VkSettings.Groups.Add(group);
+            App.NavigationService.Navigate(typeof(View.GroupView), group);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace VkGrabberUniversal.View
             var decoder = new WwwFormUrlDecoder(args.Uri.Fragment.Substring(1));
             App.VkSettings.AccessToken = decoder.GetFirstValueByName("access_token");
             App.VkSettings.UserId = decoder.GetFirstValueByName("user_id");
-            App.NavigationService.Navigate(typeof(PostsListView));
+            App.NavigationService.Navigate(typeof(MainView));
 
             wvAuthorization.NavigationCompleted -= WvAuthorization_LoginNavigationCompleted;
         }

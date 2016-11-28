@@ -59,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SettingsManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\VkApi.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\VkSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GroupViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PostsListViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
   </ItemGroup>
