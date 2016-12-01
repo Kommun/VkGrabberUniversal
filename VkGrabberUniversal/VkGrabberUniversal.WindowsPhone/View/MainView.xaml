@@ -9,12 +9,17 @@
     mc:Ignorable="d"
     Background="LightGray">
 
-    <Pivot>
-        <PivotItem Header="Настройки">
-            <view:SettingsView/>
-        </PivotItem>
-        <PivotItem Header="Посты">
-            <view:PostsListView/>
-        </PivotItem>
-    </Pivot>
+    <Grid>
+        <Pivot>
+            <PivotItem Header="Настройки">
+                <view:SettingsView/>
+            </PivotItem>
+            <PivotItem Header="Посты">
+                <view:PostsListView x:Name="postsListView"/>
+            </PivotItem>
+            <PivotItem Header="Справка">
+                <view:HelpView/>
+            </PivotItem>
+        </Pivot>
+    </Grid>
 </Page>

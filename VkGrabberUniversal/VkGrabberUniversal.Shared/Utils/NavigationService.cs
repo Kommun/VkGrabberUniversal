@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
+#if WINDOWS_PHONE_APP
+using Windows.Phone.UI.Input;
+#endif
 
 namespace VkGrabberUniversal.Utils
 {
@@ -12,6 +15,8 @@ namespace VkGrabberUniversal.Utils
     {
         private readonly Frame frame;
         private bool _canGoBack;
+
+        public event EventHandler NavigatedBack;
 
         #region Fields
 
@@ -47,6 +52,10 @@ namespace VkGrabberUniversal.Utils
         {
             this.frame = frame;
             frame.Navigated += Frame_Navigated;
+
+#if WINDOWS_PHONE_APP
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+#endif
         }
 
         /// <summary>
@@ -73,6 +82,24 @@ namespace VkGrabberUniversal.Utils
             else
                 return false;
         }
+
+#if WINDOWS_PHONE_APP
+        private void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+
+            // Если открыто уведомление - закрываем
+            if (App.PopupManager.CurrentPopup != null)
+                App.PopupManager.CloseCurrentPopup();
+            // Выполняем подписанный метод
+            else if (NavigatedBack != null)
+                NavigatedBack(sender, EventArgs.Empty);
+            // Пытаемся перейти назад
+            else if (!GoBack())
+                e.Handled = false;
+
+        }
+#endif
 
         /// <summary>
         /// Переход вперед
@@ -108,16 +135,11 @@ namespace VkGrabberUniversal.Utils
         }
 
         /// <summary>
-        /// Очистить историю переходов за исключением первой (главной) страницы
+        /// Очистить историю переходов
         /// </summary>
-        public void ClearBackStackButFirst()
+        public void ClearBackStack()
         {
-            if (frame.BackStackDepth <= 1)
-                return;
-
-            var last = frame.BackStack.First();
             frame.BackStack.Clear();
-            frame.BackStack.Add(last);
         }
 
         /// <summary>

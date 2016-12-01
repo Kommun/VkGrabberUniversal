@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CustomListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\DateTimePicker.xaml.cs">
       <DependentUpon>DateTimePicker.xaml</DependentUpon>
     </Compile>
@@ -50,6 +51,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\UploadResult.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Rest\WallUploadServer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\AppSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Converters\DateTimeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Converters\StringFormatConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Converters\StringToIntConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Converters\TimeSpanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\CustomCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Messenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\NavigationService.cs" />
@@ -88,5 +94,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Images\like.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Images\share.png" />
   </ItemGroup>
 </Project>

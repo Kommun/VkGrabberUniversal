@@ -20,7 +20,7 @@ namespace VkGrabberUniversal.Controls
 {
     public sealed partial class ListDialogPopup : UserControl
     {
-        private int _selectedIndex;
+        private int _selectedIndex = -1;
 
         /// <summary>
         /// Выбранный элемент списка

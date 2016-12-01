@@ -90,6 +90,7 @@ namespace VkGrabberUniversal.View
             App.VkSettings.AccessToken = decoder.GetFirstValueByName("access_token");
             App.VkSettings.UserId = decoder.GetFirstValueByName("user_id");
             App.NavigationService.Navigate(typeof(MainView));
+            App.NavigationService.ClearBackStack();
 
             wvAuthorization.NavigationCompleted -= WvAuthorization_LoginNavigationCompleted;
         }

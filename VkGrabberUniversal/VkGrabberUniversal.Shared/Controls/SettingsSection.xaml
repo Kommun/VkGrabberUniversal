@@ -15,8 +15,8 @@
             Background="White"
             VerticalAlignment="Top">
         <StackPanel>
-            <TextBlock Text="{Binding Header, ElementName=section}"
-                       FontSize="30"
+            <TextBlock Text="{Binding SectionHeader, ElementName=section}"
+                       FontSize="{Binding HeaderFontSize ,ElementName=section}"
                        FontWeight="SemiBold"
                        Margin="0,0,0,20"/>
             <ContentPresenter Content="{Binding AdditionalContent, ElementName=section}"/>

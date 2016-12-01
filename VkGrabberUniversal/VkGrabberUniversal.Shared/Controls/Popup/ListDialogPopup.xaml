@@ -5,7 +5,7 @@
     xmlns:local="using:VkGrabberUniversal.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+    mc:Ignorable="d"    
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="dialog">
@@ -18,7 +18,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 Margin="20,40">
-            <Grid Margin="20">
+            <Grid Margin="40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
@@ -37,7 +37,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding}"
-                                       FontSize="15"
+                                       FontSize="20"
                                        Foreground="Black"
                                        Margin="10"
                                        TextWrapping="WrapWholeWords"/>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using VkGrabberUniversal.Utils;
+using VkGrabberUniversal.Model;
 using VkGrabberUniversal.Model.Messenger;
 using VkGrabberUniversal.Model.Rest;
 
@@ -17,7 +18,12 @@ namespace VkGrabberUniversal.ViewModel
         /// <summary>
         /// Добавить группу
         /// </summary>
-        public ICommand AddGroupCommand { get; set; }
+        public ICommand AddGroupCommand { get; set; } = new CustomCommand((object p) => App.NavigationService.Navigate(typeof(View.GroupView)));
+
+        /// <summary>
+        /// Изменить группу
+        /// </summary>
+        public ICommand ChangeGroupCommand { get; set; } = new CustomCommand((object p) => App.NavigationService.Navigate(typeof(View.GroupView), p as Group));
 
         /// <summary>
         /// Обновить список постов
@@ -58,7 +64,6 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         public SettingsViewModel()
         {
-            AddGroupCommand = new CustomCommand(AddGroup);
             GetCurrentUser();
         }
 
@@ -68,17 +73,6 @@ namespace VkGrabberUniversal.ViewModel
         private async void GetCurrentUser()
         {
             CurrentUser = (await App.VkApi.GetUsersById(VkSettings.UserId)).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Добавить группу
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void AddGroup(object parameter)
-        {
-            var group = new Model.Group();
-            VkSettings.Groups.Add(group);
-            App.NavigationService.Navigate(typeof(View.GroupView), group);
         }
     }
 }

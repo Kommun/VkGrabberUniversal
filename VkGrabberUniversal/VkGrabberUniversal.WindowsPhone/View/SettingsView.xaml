@@ -6,10 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:VkGrabberUniversal.Controls"
+    xmlns:converters="using:VkGrabberUniversal.Utils.Converters"
     mc:Ignorable="d"
     Background="LightGray">
 
     <Page.Resources>
+
+        <converters:StringFormatConverter x:Key="conv"/>
+        <converters:TimeSpanConverter x:Key="timeConv"/>
+
+        <Style TargetType="controls:SettingsSection">
+            <Setter Property="HeaderFontSize" Value="20"/>
+        </Style>
 
         <Style TargetType="TextBlock" x:Key="userNameStyle">
             <Setter Property="FontSize" Value="20"/>
@@ -18,24 +26,31 @@
         </Style>
 
         <DataTemplate x:Key="groupTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="70"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox IsChecked="{Binding IsActive, Mode=TwoWay}"/>
-                <TextBox Text="{Binding Name, Mode=TwoWay}"
-                         Grid.Column="1"/>
-                <TextBox Text="{Binding LikeCount, Mode=TwoWay}"
-                         Grid.Column="2"/>
-                <TextBox Text="{Binding RepostCount, Mode=TwoWay}"
-                         Grid.Column="3"/>
-                <TextBox Text="{Binding Offset, Mode=TwoWay}"
-                         Grid.Column="4"/>
-            </Grid>
+            <Border BorderThickness="0,0,0,1"
+                    BorderBrush="LightGray"
+                    Padding="0,3">
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="20"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding LikeCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
+                           Grid.Column="1"/>
+                    <TextBlock Text="{Binding RepostCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
+                           Grid.Column="2"/>
+                    <TextBlock Text="{Binding Offset}"
+                           Grid.Column="3"/>
+                </Grid>
+            </Border>
         </DataTemplate>
 
     </Page.Resources>
@@ -43,7 +58,7 @@
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
-            <controls:SettingsSection Header="Текущий пользователь">
+            <controls:SettingsSection SectionHeader="Текущий пользователь">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -66,55 +81,78 @@
                         </StackPanel>
 
                         <Button Content="Выйти"
-                                Padding="20,10"
                                 HorizontalAlignment="Stretch"
                                 Command="{Binding LogoutCommand}"/>
                     </StackPanel>
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
 
-            <controls:SettingsSection Header="Основные настройки">
+            <controls:SettingsSection SectionHeader="Основные настройки">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
-                        <ItemsControl ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
-                                      ItemTemplate="{StaticResource groupTemplate}"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Название"/>
+                            <TextBlock Text="Лайков"
+                                       Grid.Column="1"/>
+                            <TextBlock Text="Репостов"
+                                       Grid.Column="2"/>
+                            <TextBlock Text="Сдвиг"
+                                       Grid.Column="3"/>
+                        </Grid>
+                        <controls:CustomListView ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
+                                                 ItemTemplate="{StaticResource groupTemplate}"
+                                                 ItemClickCommand="{Binding ChangeGroupCommand}">
+                            <controls:CustomListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </controls:CustomListView.ItemContainerStyle>
+                        </controls:CustomListView>
                         <Button Content="Добавить группу"
                                 Command="{Binding AddGroupCommand}"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,20,0,0"
-                                Padding="0,10"/>
+                                HorizontalAlignment="Stretch"/>
 
-                        <TextBlock Text="Название или Id целевой группы (куда будут добавляться посты)"
-                                   Margin="0,20,0,0"/>
-                        <TextBox Text="{Binding VkSettings.TargetGroup, Mode=TwoWay}"/>
+                        <TextBox Header="Название или Id целевой группы"
+                                 Text="{Binding VkSettings.TargetGroup, Mode=TwoWay}"/>
 
                         <Button Content="Обновить список записей"
                                 Command="{Binding RefreshPostsCommand}"
-                                HorizontalAlignment="Stretch"
-                                Margin="0,20,0,0"
-                                Padding="0,10"/>
+                                HorizontalAlignment="Stretch"/>
                     </StackPanel>
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
 
-            <controls:SettingsSection Header="Планировщик">
+            <controls:SettingsSection SectionHeader="Планировщик">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.FromTime, Mode=TwoWay}"
+                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.FromTime, Mode=TwoWay, Converter={StaticResource timeConv}}"
                                         Header="Начало"/>
 
-                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.ToTime, Mode=TwoWay}"
+                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.ToTime, Mode=TwoWay, Converter={StaticResource timeConv}}"
                                         Header="Конец"
                                         Margin="30,0,0,0"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
-                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.Interval, Mode=TwoWay}"
+                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.Interval, Mode=TwoWay, Converter={StaticResource timeConv}}"
                                         Header="Интервал"
                                         Margin="0,20,0,0"/>
 
-                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.Error, Mode=TwoWay}"
+                            <TimePicker Time="{Binding VkSettings.SchedulerSettings.Error, Mode=TwoWay, Converter={StaticResource timeConv}}"
                                         Header="Погрешность(+/-)"
                                         Margin="30,20,0,0"/>
                         </StackPanel>

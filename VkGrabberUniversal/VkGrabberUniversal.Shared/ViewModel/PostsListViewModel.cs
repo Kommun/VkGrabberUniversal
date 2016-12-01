@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using VkGrabberUniversal.Utils;
 using VkGrabberUniversal.Model;
 using VkGrabberUniversal.Model.Rest;
@@ -50,6 +52,11 @@ namespace VkGrabberUniversal.ViewModel
         public ICommand OpenOriginalCommand { get; set; }
 
         /// <summary>
+        /// Меню
+        /// </summary>
+        public ICommand MenuCommand { get; set; }
+
+        /// <summary>
         /// Увеличить фото
         /// </summary>
         public ICommand ZoomCommand { get; set; }
@@ -81,7 +88,7 @@ namespace VkGrabberUniversal.ViewModel
         /// <summary>
         /// Ширина поста
         /// </summary>
-        public int PostWidth { get; } = 550;
+        public double PostWidth { get; set; } = 550;
 
         private string _zoomedPhoto;
         /// <summary>
@@ -106,6 +113,9 @@ namespace VkGrabberUniversal.ViewModel
             get { return _zoomedPhotoVisibility; }
             set
             {
+                if (value == Visibility.Visible)
+                    App.NavigationService.NavigatedBack += NavigationService_NavigatedBack;
+
                 _zoomedPhotoVisibility = value;
                 OnPropertyChanged("ZoomedPhotoVisibility");
             }
@@ -142,11 +152,17 @@ namespace VkGrabberUniversal.ViewModel
             PostAtTimeCommand = new CustomCommand(PostAtTime);
             PostWithSchedulerCommand = new CustomCommand(PostWithScheduler);
             OpenOriginalCommand = new CustomCommand(OpenOriginal);
+            MenuCommand = new CustomCommand(Menu);
             ZoomCommand = new CustomCommand(Zoom);
             ZoomNextCommand = new CustomCommand(ZoomNext);
             HideZoomedPhotoCommand = new CustomCommand(HideZoomedPhoto);
             FindImageCommand = new CustomCommand(FindImage);
             ClearListCommand = new CustomCommand(ClearList);
+
+            // Для телефонов ширина поста устанавливается в зависимости от фактического размера экрана
+#if WINDOWS_PHONE_APP
+            PostWidth = Window.Current.Bounds.Width - 40;
+#endif
 
             Messenger.Default.Register(this, async (GrabMessage o) =>
              {
@@ -273,20 +289,52 @@ namespace VkGrabberUniversal.ViewModel
         /// <returns></returns>
         private async Task<bool> Post(Post post, DateTimeOffset? date = null)
         {
+            //if (!App.Settings.IsFullVersion && App.Settings.RepostsCount >= 10)
+            //{
+            //    await App.PopupManager.ShowNotificationPopup("В пробной версии невозможно добавить больше 10 записей");
+            //    return false;
+            //}
+
             bool success = false;
-            LoadingIndicatorVisibility = Visibility.Visible;
+            ChangeLoadingIncidacorVisibility(true);
 
             var groupInfo = (await App.VkApi.GetGroupsById(App.VkSettings.TargetGroup))?.FirstOrDefault();
             if (groupInfo == null)
             {
                 await App.PopupManager.ShowNotificationPopup("Целевая группа задана неверно");
+                ChangeLoadingIncidacorVisibility(false);
                 return false;
             }
 
             success = await App.VkApi.Post(groupInfo.Id.ToString(), true, post.Text, post.Attachments, date);
+            // Увеличиваем счетчик репостов
+            if (success)
+                App.Settings.RepostsCount++;
 
-            LoadingIndicatorVisibility = Visibility.Collapsed;
+            ChangeLoadingIncidacorVisibility(false);
             return success;
+        }
+
+        /// <summary>
+        /// Изменить видимость индикатора добавления поста
+        /// </summary>
+        /// <param name="isVisible"></param>
+        private async void ChangeLoadingIncidacorVisibility(bool isVisible)
+        {
+#if WINDOWS_PHONE_APP
+            var progressbar = StatusBar.GetForCurrentView();
+
+            if (isVisible)
+            {
+                progressbar.ForegroundColor = Colors.Black;
+                progressbar.ProgressIndicator.Text = "Пост загружается...";
+                await progressbar.ProgressIndicator.ShowAsync();
+            }
+            else
+                await progressbar.ProgressIndicator.HideAsync();
+#else
+            LoadingIndicatorVisibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+#endif
         }
 
         /// <summary>
@@ -307,6 +355,17 @@ namespace VkGrabberUniversal.ViewModel
                 default:
                     return "";
             }
+        }
+
+        /// <summary>
+        /// Обработчик перехода назад
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NavigationService_NavigatedBack(object sender, EventArgs e)
+        {
+            ZoomedPhotoVisibility = Visibility.Collapsed;
+            App.NavigationService.NavigatedBack -= NavigationService_NavigatedBack;
         }
 
         #endregion
@@ -385,6 +444,30 @@ namespace VkGrabberUniversal.ViewModel
             var post = parameter as Post;
             var url = new Uri(string.Format("https://vk.com/{0}{1}?w=wall-{1}_{2}", GetGroupTypeUrl(post.GroupInfo), post.GroupInfo.Id, post.Id));
             await Launcher.LaunchUriAsync(url);
+        }
+
+        /// <summary>
+        /// Меню
+        /// </summary>
+        /// <param name="parameter"></param>
+        private async void Menu(object parameter)
+        {
+            var res = await App.PopupManager.ShowListDialog(new string[] { "Добавить", "Добавить по дате", "В планировщик", "Открыть оригинал" }, "Меню");
+            switch (res)
+            {
+                case 0:
+                    Post(parameter);
+                    break;
+                case 1:
+                    PostAtTime(parameter);
+                    break;
+                case 2:
+                    PostWithScheduler(parameter);
+                    break;
+                case 3:
+                    OpenOriginal(parameter);
+                    break;
+            }
         }
 
         /// <summary>

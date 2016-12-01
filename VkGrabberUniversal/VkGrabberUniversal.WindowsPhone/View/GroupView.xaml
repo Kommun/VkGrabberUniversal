@@ -6,24 +6,48 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:VkGrabberUniversal.Controls"
+    xmlns:converters="using:VkGrabberUniversal.Utils.Converters"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="LightGray">
 
-    <controls:SettingsSection>
-        <StackPanel>
-            <ToggleSwitch Header="Активна"
-                          IsOn="{Binding IsActive, Mode=TwoWay}"/>
-            <TextBox Header="Название или Id группы"
-                     Text="{Binding Name, Mode=TwoWay}"/>
-            <TextBox Header="Количество лайков"
-                     Text="{Binding LikeCount, Mode=TwoWay}"
-                     InputScope="Number"/>
-            <TextBox Header="Количество репостов"
-                     Text="{Binding RepostCount, Mode=TwoWay}"
-                     InputScope="Number"/>
-            <TextBox Header="Сдвиг"
-                     Text="{Binding Offset, Mode=TwoWay}"
-                     InputScope="Number"/>
-        </StackPanel>
+    <Page.Resources>
+        <converters:StringToIntConverter x:Key="conv"/>
+    </Page.Resources>
+
+    <controls:SettingsSection SectionHeader="Редактирование группы"
+                              HeaderFontSize="20"
+                              Margin="10">
+        <controls:SettingsSection.AdditionalContent>
+            <StackPanel>
+                <ToggleSwitch Header="Активна"
+                              IsOn="{Binding Group.IsActive, Mode=TwoWay}"/>
+                <TextBox Header="Название или Id группы"
+                         Text="{Binding Group.Name, Mode=TwoWay}"/>
+                <TextBox Header="Количество лайков"
+                         Text="{Binding Group.LikeCount, Mode=TwoWay, Converter={StaticResource conv}}"
+                         InputScope="Number"/>
+                <TextBox Header="Количество репостов"
+                         Text="{Binding Group.RepostCount, Mode=TwoWay, Converter={StaticResource conv}}"
+                         InputScope="Number"/>
+                <TextBox Header="Сдвиг"
+                         Text="{Binding Group.Offset, Mode=TwoWay, Converter={StaticResource conv}}"
+                         InputScope="Number"/>
+                <Button Content="Сохранить"
+                        HorizontalAlignment="Stretch"
+                        Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </controls:SettingsSection.AdditionalContent>
     </controls:SettingsSection>
+
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton Label="Сохранить"
+                          Command="{Binding SaveCommand}"
+                          Icon="Accept"/>
+            <AppBarButton Label="Удалить"
+                          Command="{Binding DeleteCommand}"
+                          Icon="Delete"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
 </Page>

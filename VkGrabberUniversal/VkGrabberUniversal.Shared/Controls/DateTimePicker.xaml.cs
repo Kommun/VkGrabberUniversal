@@ -19,9 +19,6 @@ namespace VkGrabberUniversal.Controls
 {
     public sealed partial class DateTimePicker : UserControl
     {
-        private DateTimeOffset? _date;
-        private TimeSpan? _time;
-
         #region Properties
 
         #region HeaderProperty        
@@ -45,16 +42,19 @@ namespace VkGrabberUniversal.Controls
         /// <summary>
         /// Дата + время
         /// </summary>
-        public DateTime? Value
+        public DateTime Value
         {
-            get { return (DateTime?)GetValue(ValueProperty); }
+            get { return (DateTime)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(DateTime?), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnValueChanged)));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(DateTime), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnValueChanged)));
 
         private static void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
+            if (e.NewValue == null)
+                return;
+
             var control = sender as DateTimePicker;
 
             var date = ((DateTime)e.NewValue).Date;
@@ -68,34 +68,63 @@ namespace VkGrabberUniversal.Controls
 
         #endregion
 
+        #region DateProperty        
+
         /// <summary>
         /// Дата
         /// </summary>
         public DateTimeOffset? Date
         {
-            get { return _date; }
-            set
-            {
-                _date = value;
-                RefreshValue();
-            }
+            get { return (DateTimeOffset?)GetValue(DateProperty); }
+            set { SetValue(DateProperty, value); }
         }
+
+        public static readonly DependencyProperty DateProperty = DependencyProperty.Register("Date", typeof(DateTimeOffset), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnDateChanged)));
+
+        private static void OnDateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null)
+                return;
+
+            var control = sender as DateTimePicker;
+
+            if (control.Value.Date != ((DateTimeOffset?)e.NewValue)?.Date)
+                control.RefreshValue();
+        }
+
+        #endregion
+
+        #region TimeProperty        
 
         /// <summary>
         /// Время
         /// </summary>
         public TimeSpan? Time
         {
-            get { return _time; }
-            set
-            {
-                _time = value;
-                RefreshValue();
-            }
+            get { return (TimeSpan?)GetValue(TimeProperty); }
+            set { SetValue(TimeProperty, value); }
+        }
+
+        public static readonly DependencyProperty TimeProperty = DependencyProperty.Register("Time", typeof(TimeSpan), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnTimeChanged)));
+
+        private static void OnTimeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue == null)
+                return;
+
+            var control = sender as DateTimePicker;
+
+            if (control.Value.TimeOfDay != (TimeSpan?)e.NewValue)
+                control.RefreshValue();
         }
 
         #endregion
 
+        #endregion
+
+        /// <summary>
+        /// Конструктор
+        /// </summary>
         public DateTimePicker()
         {
             this.InitializeComponent();
@@ -104,9 +133,9 @@ namespace VkGrabberUniversal.Controls
         /// <summary>
         /// Обновить значение
         /// </summary>
-        private void RefreshValue()
+        public void RefreshValue()
         {
-            Value = Date?.Date.Add(Time ?? new TimeSpan());
+            Value = Date?.Date.Add(Time ?? new TimeSpan()) ?? DateTime.Now;
         }
     }
 }

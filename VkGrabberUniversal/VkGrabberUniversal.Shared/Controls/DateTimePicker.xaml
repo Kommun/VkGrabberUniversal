@@ -5,15 +5,23 @@
     xmlns:local="using:VkGrabberUniversal.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:VkGrabberUniversal.Utils.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="picker">
 
+    <UserControl.Resources>
+        <converters:DateTimeConverter x:Key="dateConv"/>
+        <converters:TimeSpanConverter x:Key="timeConv"/>
+    </UserControl.Resources>
+
     <StackPanel Orientation="Horizontal">
-        <DatePicker Header="{Binding Header, ElementName=picker}"
-                    Date="{Binding Date, ElementName=picker, Mode=TwoWay}"/>
-        <TimePicker Time="{Binding Time, ElementName=picker, Mode=TwoWay}"
+        <DatePicker x:Name="datePicker"
+                    Header="{Binding Header, ElementName=picker}"
+                    Date="{Binding Date, ElementName=picker, Mode=TwoWay, Converter={StaticResource dateConv}}"/>
+        <TimePicker x:Name="timePicker"
+                    Time="{Binding Time, ElementName=picker, Mode=TwoWay, Converter={StaticResource timeConv}}"
                     VerticalAlignment="Bottom"
                     Margin="10,0,0,0"/>
     </StackPanel>

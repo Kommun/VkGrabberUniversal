@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Store;
 using VkGrabberUniversal.Utils;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
@@ -26,6 +27,7 @@ namespace VkGrabberUniversal
     /// </summary>
     public sealed partial class App : Application
     {
+        public static AppSettings Settings = new AppSettings();
         public static NavigationService NavigationService { get; set; }
         public static PopupManager PopupManager { get; } = new PopupManager();
         public static VkSettings VkSettings { get; private set; }
@@ -55,6 +57,9 @@ namespace VkGrabberUniversal
         {
             VkSettings = await SettingsManager.DeSerializeObject<VkSettings>("settings") ?? new VkSettings();
             VkApi = new VkApi(VkSettings);
+
+            // Проверяем, активна ли лицензия
+            Settings.IsFirstLaunch = CurrentApp.LicenseInformation.ProductLicenses["FullVersion"].IsActive;
 
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)

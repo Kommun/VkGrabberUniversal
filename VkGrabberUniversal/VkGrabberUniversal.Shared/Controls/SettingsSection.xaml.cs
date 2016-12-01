@@ -19,18 +19,33 @@ namespace VkGrabberUniversal.Controls
 {
     public sealed partial class SettingsSection : UserControl
     {
-        #region HeaderProperty        
+        #region HeaderFontSizeProperty        
+
+        /// <summary>
+        /// Размер шрифта заголовка
+        /// </summary>
+        public int HeaderFontSize
+        {
+            get { return (int)GetValue(HeaderFontSizeProperty); }
+            set { SetValue(HeaderFontSizeProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register("HeaderFontSize", typeof(int), typeof(SettingsSection), new PropertyMetadata(30));
+
+        #endregion
+
+        #region SectionHeaderProperty        
 
         /// <summary>
         /// Заголовок
         /// </summary>
-        public string Header
+        public string SectionHeader
         {
-            get { return (string)GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get { return (string)GetValue(SectionHeaderProperty); }
+            set { SetValue(SectionHeaderProperty, value); }
         }
 
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(string), typeof(SettingsSection), new PropertyMetadata(null));
+        public static readonly DependencyProperty SectionHeaderProperty = DependencyProperty.Register("SectionHeader", typeof(string), typeof(SettingsSection), new PropertyMetadata(null));
 
         #endregion
 
