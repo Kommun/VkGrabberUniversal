@@ -59,7 +59,7 @@ namespace VkGrabberUniversal
             VkApi = new VkApi(VkSettings);
 
             // Проверяем, активна ли лицензия
-            Settings.IsFirstLaunch = CurrentApp.LicenseInformation.ProductLicenses["FullVersion"].IsActive;
+            Settings.IsFullVersion = CurrentApp.LicenseInformation.ProductLicenses["FullVersion"].IsActive;
 
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)

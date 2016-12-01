@@ -48,7 +48,7 @@ namespace VkGrabberUniversal.Controls
             set { SetValue(ValueProperty, value); }
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(DateTime), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnValueChanged)));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(DateTime), typeof(DateTimePicker), new PropertyMetadata(DateTime.Today, new PropertyChangedCallback(OnValueChanged)));
 
         private static void OnValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
@@ -79,7 +79,7 @@ namespace VkGrabberUniversal.Controls
             set { SetValue(DateProperty, value); }
         }
 
-        public static readonly DependencyProperty DateProperty = DependencyProperty.Register("Date", typeof(DateTimeOffset), typeof(DateTimePicker), new PropertyMetadata(null, new PropertyChangedCallback(OnDateChanged)));
+        public static readonly DependencyProperty DateProperty = DependencyProperty.Register("Date", typeof(DateTimeOffset), typeof(DateTimePicker), new PropertyMetadata(DateTimeOffset.Now, new PropertyChangedCallback(OnDateChanged)));
 
         private static void OnDateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {

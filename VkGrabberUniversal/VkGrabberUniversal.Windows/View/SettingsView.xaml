@@ -47,7 +47,7 @@
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
         <StackPanel>
 
-            <controls:SettingsSection Header="Текущий пользователь">
+            <controls:SettingsSection SectionHeader="Текущий пользователь">
                 <controls:SettingsSection.AdditionalContent>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -84,7 +84,7 @@
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
 
-            <controls:SettingsSection Header="Основные настройки">
+            <controls:SettingsSection SectionHeader="Основные настройки">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
                         <ItemsControl ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
@@ -108,7 +108,7 @@
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
 
-            <controls:SettingsSection Header="Планировщик">
+            <controls:SettingsSection SectionHeader="Планировщик">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">

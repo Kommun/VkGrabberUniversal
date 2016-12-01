@@ -9,12 +9,12 @@ namespace VkGrabberUniversal.Utils.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value ?? DateTime.Now;
+            return value ?? DateTime.Today;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return value ?? DateTime.Now;
+            return value;
         }
     }
 }
