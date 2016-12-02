@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +22,7 @@ namespace VkGrabberUniversal.ViewModel
 {
     public class PostsListViewModel : PropertyChangedBase
     {
+        private SemaphoreSlim _mutex = new SemaphoreSlim(1);
         private Post _currentZoomedPost;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
@@ -287,7 +289,7 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         /// <param name="post"></param>
         /// <returns></returns>
-        private async Task<bool> Post(Post post, DateTimeOffset? date = null)
+        private async Task<bool> Post(Post post, DateTimeOffset? date = null, bool fromScheduler = false)
         {
             //if (!App.Settings.IsFullVersion && App.Settings.RepostsCount >= 10)
             //{
@@ -295,24 +297,43 @@ namespace VkGrabberUniversal.ViewModel
             //    return false;
             //}
 
-            bool success = false;
-            ChangeLoadingIncidacorVisibility(true);
+            await _mutex.WaitAsync();
 
-            var groupInfo = (await App.VkApi.GetGroupsById(App.VkSettings.TargetGroup))?.FirstOrDefault();
-            if (groupInfo == null)
+            try
             {
-                await App.PopupManager.ShowNotificationPopup("Целевая группа задана неверно");
+                bool success = false;
+                ChangeLoadingIncidacorVisibility(true);
+
+                var groupInfo = (await App.VkApi.GetGroupsById(App.VkSettings.TargetGroup))?.FirstOrDefault();
+                if (groupInfo == null)
+                {
+                    await App.PopupManager.ShowNotificationPopup("Целевая группа задана неверно");
+                    ChangeLoadingIncidacorVisibility(false);
+                    return false;
+                }
+
+                // Для записи, публикуемой через планировщик, берем дату из настроек
+                if (fromScheduler)
+                    date = App.VkSettings.SchedulerSettings.NextPostDate;
+
+                success = await App.VkApi.Post(groupInfo.Id.ToString(), true, post.Text, post.Attachments, date);
+
+                if (success)
+                {
+                    // Увеличиваем счетчик репостов
+                    App.Settings.RepostsCount++;
+
+                    if (fromScheduler)
+                        App.VkSettings.SchedulerSettings.CalculateNextPostDate();
+                }
+
                 ChangeLoadingIncidacorVisibility(false);
-                return false;
+                return success;
             }
-
-            success = await App.VkApi.Post(groupInfo.Id.ToString(), true, post.Text, post.Attachments, date);
-            // Увеличиваем счетчик репостов
-            if (success)
-                App.Settings.RepostsCount++;
-
-            ChangeLoadingIncidacorVisibility(false);
-            return success;
+            finally
+            {
+                _mutex.Release();
+            }
         }
 
         /// <summary>
@@ -428,11 +449,7 @@ namespace VkGrabberUniversal.ViewModel
             else if (App.VkSettings.SchedulerSettings.NextPostDate < DateTime.Now.AddMinutes(1))
                 await App.PopupManager.ShowNotificationPopup("Дата следующего поста должна быть больше текущей");
             else
-            {
-                var success = await Post(parameter as Post, App.VkSettings.SchedulerSettings.NextPostDate);
-                if (success)
-                    App.VkSettings.SchedulerSettings.CalculateNextPostDate();
-            }
+                await Post(parameter as Post, fromScheduler: true);
         }
 
         /// <summary>

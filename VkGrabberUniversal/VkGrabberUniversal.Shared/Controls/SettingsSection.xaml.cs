@@ -30,7 +30,7 @@ namespace VkGrabberUniversal.Controls
             set { SetValue(HeaderFontSizeProperty, value); }
         }
 
-        public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register("HeaderFontSize", typeof(int), typeof(SettingsSection), new PropertyMetadata(30));
+        public static readonly DependencyProperty HeaderFontSizeProperty = DependencyProperty.Register("HeaderFontSize", typeof(int), typeof(SettingsSection), new PropertyMetadata(20));
 
         #endregion
 

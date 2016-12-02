@@ -1,38 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-
-  <Identity Name="13262c6c-044f-400f-9aa0-f26650918a05"
-            Publisher="CN=khmelenko"
-            Version="1.0.0.0" />
-
+  <Identity Name="11115KhmelenkoKonstantin.VkManager" Publisher="CN=97EF5691-F21D-4889-A791-CECFF3E09E15" Version="1.1.0.0" />
   <Properties>
-    <DisplayName>VkGrabberUniversal.Windows</DisplayName>
-    <PublisherDisplayName>khmelenko</PublisherDisplayName>
+    <DisplayName>Vk Manager</DisplayName>
+    <PublisherDisplayName>Khmelenko Konstantin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
     <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="VkGrabberUniversal.Windows.App">
-        <m2:VisualElements
-            DisplayName="VkGrabberUniversal.Windows"
-            Square150x150Logo="Assets\Logo.png"
-            Square30x30Logo="Assets\SmallLogo.png"
-            Description="VkGrabberUniversal.Windows"
-            ForegroundText="light"
-            BackgroundColor="#464646">
-            <m2:SplashScreen Image="Assets\SplashScreen.png" />
-        </m2:VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="VkGrabberUniversal.Windows.App">
+      <m2:VisualElements DisplayName="Vk Manager" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="VkGrabberUniversal.Windows" ForegroundText="light" BackgroundColor="#464646">
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      </m2:VisualElements>
     </Application>
   </Applications>
   <Capabilities>

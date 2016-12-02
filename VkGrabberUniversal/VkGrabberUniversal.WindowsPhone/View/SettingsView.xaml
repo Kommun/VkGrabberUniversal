@@ -15,10 +15,6 @@
         <converters:StringFormatConverter x:Key="conv"/>
         <converters:TimeSpanConverter x:Key="timeConv"/>
 
-        <Style TargetType="controls:SettingsSection">
-            <Setter Property="HeaderFontSize" Value="20"/>
-        </Style>
-
         <Style TargetType="TextBlock" x:Key="userNameStyle">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="SemiBold"/>

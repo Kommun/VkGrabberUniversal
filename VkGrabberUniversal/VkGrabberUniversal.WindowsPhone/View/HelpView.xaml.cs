@@ -25,6 +25,7 @@ namespace VkGrabberUniversal.View
         public HelpView()
         {
             this.InitializeComponent();
+            DataContext = new ViewModel.HelpViewModel();
         }
 
         /// <summary>
