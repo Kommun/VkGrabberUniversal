@@ -291,11 +291,11 @@ namespace VkGrabberUniversal.ViewModel
         /// <returns></returns>
         private async Task<bool> Post(Post post, DateTimeOffset? date = null, bool fromScheduler = false)
         {
-            //if (!App.Settings.IsFullVersion && App.Settings.RepostsCount >= 10)
-            //{
-            //    await App.PopupManager.ShowNotificationPopup("В пробной версии невозможно добавить больше 10 записей");
-            //    return false;
-            //}
+            if (!App.Settings.IsFullVersion && App.Settings.RepostsCount >= 10)
+            {
+                await App.PopupManager.ShowNotificationPopup("В пробной версии невозможно добавить больше 10 записей");
+                return false;
+            }
 
             await _mutex.WaitAsync();
 
@@ -531,7 +531,12 @@ namespace VkGrabberUniversal.ViewModel
         /// <param name="parameter"></param>
         private async void FindImage(object parameter)
         {
-            var url = new Uri(string.Format("https://www.google.com/searchbyimage?&image_url={0}", ZoomedPhoto));
+#if WINDOWS_PHONE_APP
+            var url = new Uri(string.Format("https://m.yandex.ru/images/search?rpt=imageview&url={0}", ZoomedPhoto));
+#else
+            var url = new Uri(string.Format("https://yandex.ru/images/search?rpt=imageview&url={0}", ZoomedPhoto));
+#endif
+
             await Launcher.LaunchUriAsync(url);
         }
 

@@ -16,13 +16,16 @@
         <converters:TimeSpanConverter x:Key="timeConv"/>
     </UserControl.Resources>
 
-    <StackPanel Orientation="Horizontal">
-        <DatePicker x:Name="datePicker"
-                    Header="{Binding Header, ElementName=picker}"
+    <StackPanel>
+        <ContentPresenter Content="{Binding Header, ElementName=picker}"
+                   Style="{StaticResource HeaderContentPresenterStyle}"/>
+        <StackPanel Orientation="Horizontal">
+            <DatePicker x:Name="datePicker"
                     Date="{Binding Date, ElementName=picker, Mode=TwoWay, Converter={StaticResource dateConv}}"/>
-        <TimePicker x:Name="timePicker"
+            <TimePicker x:Name="timePicker"
                     Time="{Binding Time, ElementName=picker, Mode=TwoWay, Converter={StaticResource timeConv}}"
                     VerticalAlignment="Bottom"
                     Margin="10,0,0,0"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

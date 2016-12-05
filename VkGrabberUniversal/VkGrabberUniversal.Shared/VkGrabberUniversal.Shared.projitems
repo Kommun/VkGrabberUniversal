@@ -99,5 +99,6 @@
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Images\like.png" />
     <Content Include="$(MSBuildThisFileDirectory)Images\share.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\help.txt" />
   </ItemGroup>
 </Project>

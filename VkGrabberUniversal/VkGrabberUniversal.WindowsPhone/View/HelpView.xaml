@@ -13,7 +13,7 @@
             <controls:SettingsSection SectionHeader="О программе">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
-                        <TextBlock Text="VKManager - Это приложение для полуавтоматического подбора и публикации записей в ваши сообщества вконтакте."
+                        <TextBlock Text="Vk Manager - это приложение для полуавтоматического подбора и публикации записей в ваши сообщества вконтакте."
                                    TextWrapping="WrapWholeWords"
                                    FontSize="20"/>
                         <TextBlock Text="В пробной версии можно добавить 10 записей."
@@ -30,7 +30,9 @@
 
             <controls:SettingsSection SectionHeader="Справка">
                 <controls:SettingsSection.AdditionalContent>
-                    <TextBlock Text="Текст подсказки"/>
+                    <TextBlock Text="{Binding Help}"
+                               TextWrapping="WrapWholeWords"
+                               FontSize="17"/>
                 </controls:SettingsSection.AdditionalContent>
             </controls:SettingsSection>
         </StackPanel>
