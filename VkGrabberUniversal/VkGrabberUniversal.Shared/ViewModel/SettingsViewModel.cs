@@ -72,7 +72,7 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         private async void GetCurrentUser()
         {
-            CurrentUser = (await App.VkApi.GetUsersById(VkSettings.UserId)).FirstOrDefault();
+            CurrentUser = (await App.VkApi.GetUsersById(VkSettings.UserId))?.FirstOrDefault();
         }
     }
 }

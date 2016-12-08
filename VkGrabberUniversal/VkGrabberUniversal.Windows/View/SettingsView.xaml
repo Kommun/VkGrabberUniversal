@@ -6,10 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:VkGrabberUniversal.Controls"
-    mc:Ignorable="d"
-    Background="LightGray">
+    xmlns:converters="using:VkGrabberUniversal.Utils.Converters"
+    mc:Ignorable="d">
 
     <Page.Resources>
+
+        <converters:StringFormatConverter x:Key="conv"/>
 
         <Style TargetType="TextBlock" x:Key="userNameStyle">
             <Setter Property="FontSize" Value="20"/>
@@ -17,29 +19,35 @@
             <Setter Property="Foreground" Value="SteelBlue"/>
         </Style>
 
-        <Style TargetType="controls:SettingsSection">
-            <Setter Property="Width" Value="550"/>
-        </Style>
-
         <DataTemplate x:Key="groupTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="70"/>
-                    <ColumnDefinition Width="70"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox IsChecked="{Binding IsActive, Mode=TwoWay}"/>
-                <TextBox Text="{Binding Name, Mode=TwoWay}"
-                         Grid.Column="1"/>
-                <TextBox Text="{Binding LikeCount, Mode=TwoWay}"
-                         Grid.Column="2"/>
-                <TextBox Text="{Binding RepostCount, Mode=TwoWay}"
-                         Grid.Column="3"/>
-                <TextBox Text="{Binding Offset, Mode=TwoWay}"
-                         Grid.Column="4"/>
-            </Grid>        
+            <Border BorderThickness="0,0,0,1"
+                    BorderBrush="LightGray">
+                <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="FontSize" Value="20"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox IsChecked="{Binding IsActive}"
+                              IsHitTestVisible="False"/>
+                    <TextBlock Text="{Binding Name}"
+                               Grid.Column="1"/>
+                    <TextBlock Text="{Binding LikeCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
+                           Grid.Column="2"/>
+                    <TextBlock Text="{Binding RepostCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
+                           Grid.Column="3"/>
+                    <TextBlock Text="{Binding Offset}"
+                           Grid.Column="4"/>
+                </Grid>
+            </Border>
         </DataTemplate>
 
     </Page.Resources>
@@ -87,8 +95,41 @@
             <controls:SettingsSection SectionHeader="Основные настройки">
                 <controls:SettingsSection.AdditionalContent>
                     <StackPanel>
-                        <ItemsControl ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
-                                      ItemTemplate="{StaticResource groupTemplate}"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="Название"
+                                       Grid.Column="1"/>
+                            <TextBlock Text="Лайков"
+                                       Grid.Column="2"/>
+                            <TextBlock Text="Репостов"
+                                       Grid.Column="3"/>
+                            <TextBlock Text="Сдвиг"
+                                       Grid.Column="4"/>
+                        </Grid>
+                        <controls:CustomListView HorizontalAlignment="Stretch" ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
+                                                 ItemTemplate="{StaticResource groupTemplate}"
+                                                 ItemClickCommand="{Binding ChangeGroupCommand}">
+                            <controls:CustomListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                            </controls:CustomListView.ItemContainerStyle>
+                        </controls:CustomListView>
                         <Button Content="Добавить группу"
                                 Command="{Binding AddGroupCommand}"
                                 HorizontalAlignment="Stretch"

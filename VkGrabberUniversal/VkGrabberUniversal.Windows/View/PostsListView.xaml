@@ -130,11 +130,16 @@
                                HorizontalAlignment="Stretch"
                                Margin="0,15"/>
                     <StackPanel Orientation="Horizontal">
+                        <Image Source="/Images/like.png"
+                                   Width="15"
+                                   Margin="0,0,10,0"/>
                         <TextBlock Text="{Binding Likes.Count}"
                                    Foreground="SteelBlue"/>
+                        <Image Source="/Images/share.png"
+                                   Width="15"
+                                   Margin="20,0,10,0"/>
                         <TextBlock Text="{Binding Reposts.Count}"
-                                   Foreground="SteelBlue"
-                                   Margin="10,0,0,0"/>
+                                   Foreground="SteelBlue"/>
 
                         <Button Content="Добавить"
                                 Style="{StaticResource linkButton}"

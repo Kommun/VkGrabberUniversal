@@ -32,22 +32,66 @@
                         </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="{Binding Name}"/>
+                    <CheckBox IsChecked="{Binding IsActive}"
+                              IsEnabled="False"/>
+                    <TextBlock Text="{Binding Name}"
+                               Grid.Column="1"/>
                     <TextBlock Text="{Binding LikeCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
-                           Grid.Column="1"/>
-                    <TextBlock Text="{Binding RepostCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
                            Grid.Column="2"/>
-                    <TextBlock Text="{Binding Offset}"
+                    <TextBlock Text="{Binding RepostCount, Converter={StaticResource conv}, ConverterParameter='>{0}'}"
                            Grid.Column="3"/>
+                    <TextBlock Text="{Binding Offset}"
+                           Grid.Column="4"/>
                 </Grid>
             </Border>
         </DataTemplate>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="CheckGlyph">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="NormalRectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="Grid" Width="25.5">
+                                <Border x:Name="CheckBackground" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" HorizontalAlignment="Left" Height="25.5" IsHitTestVisible="False" VerticalAlignment="Center" Width="25.5"/>
+                                <Rectangle x:Name="NormalRectangle" Fill="{ThemeResource CheckBoxBackgroundThemeBrush}" HorizontalAlignment="Center" Height="13" IsHitTestVisible="False" Visibility="Collapsed" VerticalAlignment="Center" Width="13"/>
+                                <Path x:Name="CheckGlyph" Data="M0,123 L39,93 L124,164 L256,18 L295,49 L124,240 z" Fill="{ThemeResource CheckBoxForegroundThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Center" Height="17" IsHitTestVisible="False" Stretch="Fill" StrokeThickness="2.5" StrokeLineJoin="Round" Visibility="Collapsed" VerticalAlignment="Center" Width="18.5"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
     </Page.Resources>
 
@@ -94,19 +138,21 @@
                                 </Style>
                             </Grid.Resources>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="70"/>
                                 <ColumnDefinition Width="70"/>
                                 <ColumnDefinition Width="70"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Название"/>
-                            <TextBlock Text="Лайков"
+                            <TextBlock Text="Название"
                                        Grid.Column="1"/>
-                            <TextBlock Text="Репостов"
+                            <TextBlock Text="Лайков"
                                        Grid.Column="2"/>
-                            <TextBlock Text="Сдвиг"
+                            <TextBlock Text="Репостов"
                                        Grid.Column="3"/>
+                            <TextBlock Text="Сдвиг"
+                                       Grid.Column="4"/>
                         </Grid>
                         <controls:CustomListView ItemsSource="{Binding VkSettings.Groups, Mode=TwoWay}"
                                                  ItemTemplate="{StaticResource groupTemplate}"

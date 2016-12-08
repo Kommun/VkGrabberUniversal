@@ -6,24 +6,45 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:VkGrabberUniversal.Controls"
+    xmlns:converters="using:VkGrabberUniversal.Utils.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <controls:SettingsSection>
-        <StackPanel>
-            <ToggleSwitch Header="Активна"
-                          IsOn="{Binding IsActive, Mode=TwoWay}"/>
-            <TextBox Header="Название или Id группы"
-                     Text="{Binding Name, Mode=TwoWay}"/>
-            <TextBox Header="Количество лайков"
-                     Text="{Binding LikeCount, Mode=TwoWay}"
+    <Page.Resources>
+        <converters:StringToIntConverter x:Key="conv"/>
+    </Page.Resources>
+
+    <controls:SettingsSection SectionHeader="Редактирование группы"
+                              VerticalAlignment="Center">
+        <controls:SettingsSection.AdditionalContent>
+            <StackPanel>
+                <ToggleSwitch Header="Активна"
+                          IsOn="{Binding Group.IsActive, Mode=TwoWay}"/>
+                <TextBox Header="Название или Id группы"
+                     Text="{Binding Group.Name, Mode=TwoWay}"/>
+                <TextBox Header="Количество лайков"
+                     Text="{Binding Group.LikeCount, Mode=TwoWay, Converter={StaticResource conv}}"
                      InputScope="Number"/>
-            <TextBox Header="Количество репостов"
-                     Text="{Binding RepostCount, Mode=TwoWay}"
+                <TextBox Header="Количество репостов"
+                     Text="{Binding Group.RepostCount, Mode=TwoWay, Converter={StaticResource conv}}"
                      InputScope="Number"/>
-            <TextBox Header="Сдвиг"
-                     Text="{Binding Offset, Mode=TwoWay}"
+                <TextBox Header="Сдвиг"
+                     Text="{Binding Group.Offset, Mode=TwoWay, Converter={StaticResource conv}}"
                      InputScope="Number"/>
-        </StackPanel>
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Сохранить"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding SaveCommand}"/>
+                    <Button Content="Удалить"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding DeleteCommand}"
+                            Grid.Column="1"/>
+                </Grid>
+            </StackPanel>
+        </controls:SettingsSection.AdditionalContent>
     </controls:SettingsSection>
 </Page>

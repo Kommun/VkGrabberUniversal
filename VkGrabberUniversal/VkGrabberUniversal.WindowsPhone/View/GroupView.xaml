@@ -15,7 +15,6 @@
     </Page.Resources>
 
     <controls:SettingsSection SectionHeader="Редактирование группы"
-                              HeaderFontSize="20"
                               Margin="10">
         <controls:SettingsSection.AdditionalContent>
             <StackPanel>
@@ -32,9 +31,6 @@
                 <TextBox Header="Сдвиг"
                          Text="{Binding Group.Offset, Mode=TwoWay, Converter={StaticResource conv}}"
                          InputScope="Number"/>
-                <Button Content="Сохранить"
-                        HorizontalAlignment="Stretch"
-                        Command="{Binding SaveCommand}"/>
             </StackPanel>
         </controls:SettingsSection.AdditionalContent>
     </controls:SettingsSection>
