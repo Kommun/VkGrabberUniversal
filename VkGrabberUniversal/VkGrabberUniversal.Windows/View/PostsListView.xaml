@@ -22,6 +22,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <TextBlock Text="{TemplateBinding Content}"
+                                   FontSize="13"
                                    FontWeight="Normal"
                                    Padding="{TemplateBinding Padding}"
                                    x:Name="tb">

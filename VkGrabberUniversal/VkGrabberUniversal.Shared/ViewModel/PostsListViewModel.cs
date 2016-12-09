@@ -142,6 +142,14 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         public ObservableCollection<Post> FilteredPosts { get; set; } = new ObservableCollection<Post>();
 
+        /// <summary>
+        /// Активные группы
+        /// </summary>
+        public List<Group> ActiveGroups
+        {
+            get { return App.VkSettings.Groups.Where(g => g.IsActive).ToList(); }
+        }
+
         #endregion
 
         /// <summary>
@@ -182,8 +190,7 @@ namespace VkGrabberUniversal.ViewModel
         /// </summary>
         private async Task Grab()
         {
-            var activeGroups = App.VkSettings.Groups.Where(g => g.IsActive).ToList();
-            foreach (var group in activeGroups)
+            foreach (var group in ActiveGroups)
             {
                 var groupInfo = (await App.VkApi.GetGroupsById(group.Name))?.FirstOrDefault();
                 if (groupInfo == null)
@@ -399,7 +406,7 @@ namespace VkGrabberUniversal.ViewModel
         /// <param name="parameter"></param>
         private async void GrabNext(object parameter)
         {
-            foreach (var group in App.VkSettings.Groups)
+            foreach (var group in ActiveGroups)
                 group.Offset += 100;
 
             await Grab();
